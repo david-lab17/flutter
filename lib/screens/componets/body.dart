@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/constants.dart';
+import 'package:flutter_app/models/product.dart';
+
+import 'categories.dart';
 
 class Body extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
@@ -17,33 +21,64 @@ class Body extends StatelessWidget {
           ),
         ),
         Categories(),
+        Expanded(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kDefaultPaddin),
+            child: GridView.builder(
+              itemCount: products.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: kDefaultPaddin,
+                crossAxisSpacing: kDefaultPaddin,
+                childAspectRatio: 0.75,
+              ),
+              itemBuilder: (context, index) => ItemCard(
+                product: products[index],
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
 }
 
-//We need stateful widget to our categories
-class Categories extends StatefulWidget {
-  Categories({Key key}) : super(key: key);
+class ItemCard extends StatelessWidget {
+  final Product product;
+  final Function press;
+  const ItemCard({
+    Key key,
+    this.product,
+    this.press,
+  }) : super(key: key);
 
-  @override
-  _CategoriesState createState() => _CategoriesState();
-}
-
-class _CategoriesState extends State<Categories> {
-  List<String> categories = ["hand bag", "Jewellery", "Footwear", "Dresses"];
-  //by default 1st item will be selected
-  int selectedindex = 0;
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: 25,
-      child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: categories.length,
-          itemBuilder: (context, index) => Text(
-                categories[index],
-              )),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: EdgeInsets.all(kDefaultPaddin),
+          // height: 180,
+          //  width: 160,
+          decoration: BoxDecoration(
+            color: product.color,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Image.asset(product.image),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: kDefaultPaddin / 4),
+          child: Text(
+            product.title,
+            style: TextStyle(color: kTextLightColor),
+          ),
+        ),
+        Text(
+          "\Ksh ${product.price}",
+          style: TextStyle(fontWeight: FontWeight.bold),
+        )
+      ],
     );
   }
 }
